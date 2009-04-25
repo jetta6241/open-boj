@@ -10,11 +10,15 @@ public class JudgeBean
     private String ip;
     /**Judge的端口*/
     private int port;
-    /**Judge已判题目的数量*/
+    /**Judge已判题目（收到）的数量*/
     private long judges = 0;
+    /**Judge已收到题目的数量*/
+    private long send = 0;
     /**Judge重试次数*/
     private int retry = 0;
-
+    /**Judge最后活动时间 */
+    private String time;
+    
     /***
      * 增加重试计数
      */
@@ -29,6 +33,14 @@ public class JudgeBean
     public void incJudges()
     {
         judges++;
+    }
+
+   /***
+    * 增加Judge已发送计数
+    */
+    public void incSend()
+    {
+        send++;
     }
 
     /**
@@ -71,6 +83,38 @@ public class JudgeBean
      */
     public int getRetry() {
         return retry;
+    }
+
+    /**
+     * @return the time
+     */
+    public String getTime()
+    {
+        return time;
+    }
+
+    /**
+     * @param time the time to set
+     */
+    public void setTime(String time)
+    {
+        this.time = time;
+    }
+
+    /**
+     * @return the send
+     */
+    public long getSend()
+    {
+        return send;
+    }
+
+    /**
+     * @param send the send to set
+     */
+    public void setSend(long send)
+    {
+        this.send = send;
     }
 
 }

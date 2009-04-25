@@ -2,6 +2,7 @@ package client.compile;
 import bean.RunBean;
 import config.Const;
 import java.io.File;
+import java.util.Scanner;
 
 /**
  * 提供编译源代码的接口
@@ -53,10 +54,14 @@ public abstract class Compiler
                }
            }
            catch(Exception e){}
-
            //获得进程句柄并强制结束
            Process p = watch.getProcess();
-           p.destroy();
+           
+           if(p!=null)
+           {
+               run.setComp(getCompileError(p));
+               p.destroy();
+           }
 
            //获得返回值
            int ret = 0;
@@ -76,7 +81,6 @@ public abstract class Compiler
            catch(Exception e)
            {
                //获取exitValue出现异常，或者进程返回值不等于0，都为编译错误。
-                run.setComp(getCompileError(p));
                 run.setResult(Const.CE);
                 return false;
            }//end catch 获取返回值
@@ -100,7 +104,6 @@ public abstract class Compiler
     abstract protected void makeBinPath();
 
     protected abstract String getCompileStr();
-    protected abstract StringBuffer getCompileError(Process p);
 
     private static C_Compiler c = new C_Compiler();
     private static Cpp_Compiler cpp = new Cpp_Compiler();
@@ -131,5 +134,37 @@ public abstract class Compiler
             //语言混乱，默认为C语言
             return c.compile(run);
         }
+    }
+
+    protected StringBuffer getCompileError(Process p)
+    {
+        Scanner scan = new Scanner(p.getErrorStream());
+        StringBuffer ss = new StringBuffer();
+
+        //读取前10行的错误信息
+        try
+        {
+            for(int i=0;scan.hasNextLine() && i<10;i++)
+            {
+                ss.append(scan.nextLine());
+                ss.append("\r\n");
+            }
+        }
+        catch(Exception e)
+        {
+            System.out.println(e);
+        }
+        finally
+        {
+            try
+            {
+                p.getErrorStream().close();
+                scan.close();
+            }
+            catch(Exception e){}
+        }
+
+        StringBuffer ss1 = new StringBuffer(ss);
+        return ss1;
     }
 }

@@ -18,6 +18,14 @@ public class ClientSendImpl implements Runnable
     /**待发送的队列*/
     private final LinkedList<RunBean>  queue = new LinkedList();
 
+    /**控制器*/
+    ClientController controller = null;
+    
+    public ClientSendImpl(ClientController con)
+    {
+        controller = con;
+    }
+
     public void run()
     {
         service();
@@ -38,19 +46,20 @@ public class ClientSendImpl implements Runnable
                         {
                             //如果发送成功，移除
                             queue.removeFirst();
-                            System.out.println("发送判题结果");
+                            //记录到GUI
+                            controller.handle(ClientController.EVENT_SEND, null);
                         }
                         TimeUnit.MILLISECONDS.sleep(50);
                     }
                     else
                     {
-                        TimeUnit.MILLISECONDS.sleep(100);
+                        TimeUnit.MILLISECONDS.sleep(50);
                     }
                 }
             }
             catch(Exception e)
             {
-                e.printStackTrace();
+                controller.handle(ClientController.EVENT_EXCEPTION, new Exception("发送线程出错",e));
             }
         }
     }
@@ -65,7 +74,7 @@ public class ClientSendImpl implements Runnable
         Socket socket = null;
         try
         {
-            socket = new Socket(Const.SERVER_IP,Const.SERVER_RCV_SOCKET);
+            socket = new Socket(Const.SERVER_IP,Const.SERVER_RCV_PORT);
             //构造Object发送流
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             oos.writeObject(b);
@@ -85,7 +94,8 @@ public class ClientSendImpl implements Runnable
         catch(Exception e)
         {
             //产生异常，则发送失败
-            e.printStackTrace();
+            controller.handle(ClientController.EVENT_EXCEPTION, new Exception("发送失败",e));
+            controller.handle(ClientController.EVENT_RETRY, null);
             return false;
         }
         finally

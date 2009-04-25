@@ -1,5 +1,6 @@
 package client;
 import bean.RunBean;
+import client.gui.ClientFrame;
 import config.Const;
 import java.io.*;
 import java.net.*;
@@ -16,6 +17,11 @@ public class ClientRcvImpl implements Runnable
     /**Client收到的待判题目队列*/
     private final LinkedList<RunBean> queue = new LinkedList();
 
+    
+
+    /**控制器*/
+    ClientController controller = null;
+
     /***
      * Runnable的主函数
      */
@@ -25,17 +31,12 @@ public class ClientRcvImpl implements Runnable
         service();
     }
 
-    public ClientRcvImpl()
+    public ClientRcvImpl(ClientController con) throws IOException
     {
-        try
-        {
-            server = new ServerSocket(Const.CLIENT_RCV_SOCKET);
-        }
-        catch(Exception e)
-        {
-            //启动Client异常
-            e.printStackTrace();
-        }
+        controller = con;
+
+        server = new ServerSocket(Const.CLIENT_RCV_PORT);
+
     }
 
     /***
@@ -60,14 +61,16 @@ public class ClientRcvImpl implements Runnable
                     synchronized(queue)
                     {
                         queue.add((RunBean)obj);
-                        System.out.println("收到RunBean");
+                        //System.out.println("收到RunBean");
+                        controller.handle(ClientController.EVENT_RCV, null);
                     }
                     socket.getOutputStream().write("OK\r\n".getBytes());
                 }
             }
             catch(Exception e)
             {
-                e.printStackTrace();
+                controller.handle(ClientController.EVENT_RETRY, null);
+                controller.handle(ClientController.EVENT_EXCEPTION, new Exception("接受线程出错",e));
             }
             finally
             {

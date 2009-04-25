@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import tool.Tools;
 
 /**
  * 实现了Judge接口
@@ -55,6 +56,7 @@ public class JudgerImpl implements Judger
     {
         //生成Judge所需要的各种额外参数
         makeJudgeArg();
+        //Tools.logDebug(judge_cmd);
         //判题
         Process p;
         try

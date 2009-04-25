@@ -24,40 +24,6 @@ public class Java_Compiler extends Compiler
         return ss.toString();
     }
 
-    @Override
-    protected StringBuffer getCompileError(Process p)
-    {
-        Scanner scan = new Scanner(p.getErrorStream());
-        StringBuffer ss = new StringBuffer();
-
-        //读取前10行的错误信息
-        try
-        {
-            for(int i=0;scan.hasNextLine() && i<10;i++)
-            {
-                ss.append(scan.nextLine());
-                ss.append("\n");
-            }
-        }
-        catch(Exception e)
-        {
-            System.out.println(e);
-        }
-        finally
-        {
-            try
-            {
-                p.getErrorStream().close();
-                scan.close();
-            }
-            catch(Exception e){}
-        }
-
-        //过滤mingw系统路径
-        Pattern pattern = Pattern.compile("[a-zA-Z]:(\\\\[^\\\\/:\"<>\\|]+)+", Pattern.MULTILINE|Pattern.UNIX_LINES);
-        StringBuffer ss1 = new StringBuffer(pattern.matcher(ss).replaceAll(""));
-        return ss1;
-    }
 
     @Override
     protected void makeSrcFile()
@@ -68,11 +34,11 @@ public class Java_Compiler extends Compiler
         {
             //生成源文件位置
             StringBuilder sb = new StringBuilder(Const.SRC_PATH);
-            sb.append("Main.java");
-            srcFile = sb.toString();
+            srcFile = "Main.java";
+            sb.append(srcFile);
 
             //把run bean中的源代码写入源文件
-            fout = new FileWriter(srcFile);
+            fout = new FileWriter(sb.toString());
             fout.write(run.getSrc().toString());
         }
         catch (IOException ex)

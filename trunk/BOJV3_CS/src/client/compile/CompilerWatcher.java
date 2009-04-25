@@ -1,5 +1,8 @@
 package client.compile;
 
+import config.Const;
+import java.io.File;
+
 /**
  * Compiler执行编译器时的线程。
  * @author liheyuan
@@ -26,12 +29,11 @@ public class CompilerWatcher implements Runnable
     {
         try
         {
-            process = Runtime.getRuntime().exec(compStr);
+            process = Runtime.getRuntime().exec(compStr,null,new File(Const.SRC_PATH));
             process.waitFor();
         }
         catch(Exception e)
         {
-
         }
     }
     
