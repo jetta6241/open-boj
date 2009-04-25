@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+    <constant name="struts.ui.theme" value="simple" />
+    <constant name="struts.i18n.encoding" value="UTF-8"/>
+    <!--前端的包-->
+    <package name="default" extends="struts-default">
+        <interceptors>
+            <interceptor name="annotationInterceptor"
+				class="com.opensymphony.xwork2.interceptor.annotations.AnnotationWorkflowInterceptor" />
+            <interceptor name="loginInterceptor" class="interceptor.LoginInterceptor"></interceptor>
+            <interceptor name="ballonInterceptor" class="interceptor.BallonInterceptor"></interceptor>
+            <interceptor-stack name="frontStack">
+                <interceptor-ref name="defaultStack"></interceptor-ref>
+            </interceptor-stack>
+            <interceptor-stack name="frontLoginStack">
+                <interceptor-ref name="loginInterceptor"></interceptor-ref>
+                <interceptor-ref name="frontStack"></interceptor-ref>
+            </interceptor-stack>
+            <interceptor-stack name="ballonStack">
+                <interceptor-ref name="ballonInterceptor"></interceptor-ref>
+                <interceptor-ref name="frontStack"></interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+        <default-interceptor-ref name="frontStack"></default-interceptor-ref>
+        <global-results>
+            <result name="login" type="redirect">/login.jsp</result>
+        </global-results>
+
+        <action name="index">
+            <result>/index.jsp</result>
+        </action>
+        <action name="contestList" class="action.ContestAction" method="list">
+            <result name="success">/contest_list.jsp</result>
+            <result name="error">/error.jsp</result>
+            <result name="input">/error.jsp</result>
+        </action>
+        <action name="contest" class="action.ContestAction" method="show">
+            <result name="success">/contest.jsp</result>
+            <result name="error">/error.jsp</result>
+            <result name="input">/error.jsp</result>
+        </action>
+        <action name="problem" class="action.ProblemDetailAction">
+            <result name="success">/problem_detail.jsp</result>
+            <result name="error">/error.jsp</result>
+            <result name="input">/error.jsp</result>
+        </action>
+        <action name="submit">
+            <result>/submit.jsp</result>
+            <result name="error">/error.jsp</result>
+            <result name="input">/error.jsp</result>
+            <interceptor-ref name="frontLoginStack"></interceptor-ref>
+        </action>
+        <action name="storesubmit" class="action.StoreSubmitAction">
+            <result name="input">/submit.jsp</result>
+            <result name="success" type="redirectAction">run</result>
+            <result name="error">/error.jsp</result>
+            <interceptor-ref name="frontLoginStack"></interceptor-ref>
+        </action>
+        <action name="run" class="action.RunAction" method="list">
+            <result name="input">/run.jsp</result>
+            <result name="success">/run.jsp</result>
+            <result name="error">/error.jsp</result>
+        </action>
+        <action name="complileError" class="action.CompileErrorAction" method="show">
+            <result name="input">/compileError.jsp</result>
+            <result name="success">/compileError.jsp</result>
+            <result name="error">/compileError.jsp</result>
+        </action>
+        <action name="gereratecode" class="action.VCodeAction" method="generate">
+            <result type="stream">
+                <param name="contentType">image/jpeg</param>
+                <param name="inputName">inputStream</param>
+            </result>
+        </action>
+        <action name="login" >
+            <result>/login.jsp</result>
+        </action>
+        <action name="reg" >
+            <result>/reg.jsp</result>
+        </action>
+        <action name="ballon" class="action.BallonAction" method="show" >
+            <result name="success">/ballon.jsp</result>
+            <result name="error">/ballon.jsp</result>
+            <result name="login" >/ballon_login.jsp</result>
+            <interceptor-ref name="ballonStack" />
+        </action>
+        <action name="sendBallon" class="action.BallonAction" method="send" >
+            <result name="success" type="redirect">/ballon?cid=%{cid}</result>
+            <result name="error">/ballon.jsp</result>
+            <result name="login" >/ballon_login.jsp</result>
+            <interceptor-ref name="ballonStack" />
+        </action>
+        <action name="ballonLogin" class="action.BallonAction" method="login">
+            <result name="success" type="redirect">/ballon</result>
+            <result name="error">/ballon_login.jsp</result>
+        </action>
+        <action name="storeReg" class="action.UserAction" method="reg">
+            <result name="input">/reg.jsp</result>
+            <result name="success" type="redirect">/login.jsp</result>
+            <result name="error">/reg.jsp</result>
+        </action>
+        <action name="chkLogin" class="action.UserAction" method="login">
+            <result name="input">/login.jsp</result>
+            <result name="success" type="redirect">/index.jsp</result>
+            <result name="error">/login.jsp</result>
+        </action>
+        <action name="logout" class="action.UserAction" method="logout">
+            <result name="success" type="redirect">/index.jsp</result>
+            <interceptor-ref name="frontLoginStack"></interceptor-ref>
+        </action>
+        <action name="editUser">
+            <result name="success">/user_edit.jsp</result>
+            <interceptor-ref name="frontLoginStack"></interceptor-ref>
+        </action>
+        <action name="storeEditUser" class="action.UserAction" method="edit">
+            <result name="success" type="redirect">/editUser</result>
+            <result name="error">/user_edit.jsp</result>
+            <result name="input">/user_edit.jsp</result>
+            <interceptor-ref name="frontLoginStack"></interceptor-ref>
+        </action>
+    </package>
+
+    <!--默认的Admin包，对所有的未登录进行拦截-->
+    <package name="admin" extends="struts-default" >
+        <interceptors>
+            <interceptor name="adminLoginInterceptor"
+				class="interceptor.AdminLoginInterceptor" >
+            </interceptor>
+            <interceptor-stack name="adminstack">
+                <interceptor-ref name="adminLoginInterceptor"></interceptor-ref>
+                <interceptor-ref name="defaultStack"></interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+
+        <default-interceptor-ref name="adminstack" />
+        <global-results>
+            <result name="login">/admin/login.jsp</result>
+        </global-results>
+    </package>
+
+   <!--admin管理后台-->
+    <package name="admin_problem" extends="admin" namespace="/admin">
+        <action name="admin">
+            <result>/admin/index.jsp</result>
+        </action>
+        <!--题目管理-->
+        <action name="addProblem">
+            <result>/admin/problem_add.jsp</result>
+        </action>
+        <action name="storeAddProblem" class="action.admin.ProblemAction" method="storeAdd">
+            <result name="success" type="redirect">/admin/listProblem</result>
+            <result name="error">/admin/error.jsp</result>
+        </action>
+        <action name="listProblem" class="action.admin.ProblemAction" method="list">
+            <result name="success">/admin/problem_list.jsp</result>
+            <result name="error">/admin/problem_list.jsp</result>
+        </action>
+
+        <action name="editProblem" class="action.admin.ProblemAction" method="beforeEdit">
+            <result name="success">/admin/problem_edit.jsp</result>
+            <result name="error">/admin/problem_edit.jsp</result>
+        </action>
+        <action name="storeEditProblem" class="action.admin.ProblemAction" method="edit">
+            <result name="success" type="redirect">/admin/listProblem</result>
+            <result name="error">/admin/problem_edit.jsp</result>
+            <result name="input">/admin/problem_edit.jsp</result>
+        </action>
+
+        <action name="dataUpload" class="action.admin.UploadAction" method="uploadData">
+            <result name="success" type="chain">listProblem</result>
+            <result name="error">/admin/problem_list.jsp</result>
+        </action>
+        <action name="imageUpload" class="action.admin.UploadAction" method="uploadPic">
+            <result name="success" type="redirect">/admin/editProblem.action?pid=${pid}</result>
+            <result name="error" type="redirect">/admin/editProblem.action?pid=${pid}</result>
+        </action>
+    </package>
+    <!--竞赛管理-->
+    <package name="admin_contest" extends="admin" namespace="/admin">
+        <action name="addContest">
+            <result>/admin/contest_add.jsp</result>
+        </action>
+        <action name="storeAddContest" class="action.admin.ContestAction" method="storeAdd">
+            <result name="success" type="redirect">listContest</result>
+            <result name="error">/admin/error.jsp</result>
+        </action>
+        <action name="listContest" class="action.admin.ContestAction" method="list">
+            <result>/admin/contest_list.jsp</result>
+        </action>
+        <action name="editContest" class="action.admin.ContestAction" method="beforeEdit">
+            <result>/admin/contest_edit.jsp</result>
+            <result name="error">/admin/contest_list.jsp</result>
+        </action>
+        <action name="storeEditContest" class="action.admin.ContestAction" method="storeEdit">
+            <result name="success" type="redirect">
+                <param name="location">editContest?cid=${cid}</param>
+                <param name="parse">true</param>
+            </result>
+            <result name="error">/admin/error.jsp</result>
+        </action>
+        <action name="addProblem2Contest" class="action.admin.ContestAction" method="addProblem">
+            <result name="success" type="redirect">
+                <param name="location">editContest?cid=${cid}</param>
+                <param name="parse">true</param>
+            </result>
+            <result name="error">/admin/error.jsp</result>
+        </action>
+    </package>
+
+    <!--竞赛管理-->
+    <package name="admin_user" extends="admin" namespace="/admin">
+        <action name="addUsers">
+            <result>/admin/user_add.jsp</result>
+        </action>
+        <action name="storeAddUsers" class="action.admin.UserAction" method="add">
+            <result name="success" type="redirect">/admin/</result>
+            <result name="input">/admin/user_add.jsp</result>
+            <result name="error">/admin/user_add.jsp</result>
+        </action>
+    </package>
+
+    <!--Admin后台登陆-->
+    <package name="admin_login" extends="struts-default" namespace="/admin">
+        <action name="login">
+            <result>/admin/login.jsp</result>
+        </action>
+        <action name="checkLogin" class="action.admin.LoginAction" method="login">
+            <result name="input">/admin/login.jsp</result>
+            <result name="error">/admin/login.jsp</result>
+            <result name="success">/admin/index.jsp</result>
+        </action>
+        <action name="logout" class="action.admin.LoginAction" method="logout">
+            <result name="success">/admin/index.jsp</result>
+        </action>
+    </package>
+
+    <!--Post消息管理-->
+    <package name="admin_msg" extends="admin" namespace="/admin">
+        <action name="message" class="action.admin.MessageAction" method="show">
+            <result>/admin/message.jsp</result>
+        </action>
+        <action name="postMessage" class="action.admin.MessageAction" method="post">
+            <result name="success" type="redirect">/admin/message</result>
+            <result name="error">/admin/message.jsp</result>
+        </action>
+    </package>
+
+</struts>

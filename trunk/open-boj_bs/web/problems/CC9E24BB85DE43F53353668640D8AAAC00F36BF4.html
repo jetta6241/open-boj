@@ -1,0 +1,14 @@
+<h3>Description</h3>
+<p><p>求解A*B，-1000 &lt; A,B &lt; 1000</p></p>
+<h3>Input</h3>
+<p><p>第一行一个数字t，代表有几组测试数据<br />接下来t行，每行两个数A和B</p></p>
+<h3>Output</h3>
+<p><p>对于每组测试数据，输出A*B</p></p>
+<h3>Sample Input</h3>
+<p><p>2<br />1 2<br />2 3</p></p>
+<h3>Sample Output</h3>
+<p><p>2<br />6</p></p>
+<h3>Source</h3>
+<p></p>
+<h3>Hint</h3>
+<p><p>这是另外一种输入的方式，而且这种方式正在逐渐的取代上面那种方式，因为有一个t的范围更容易让大家知道数据的规模。<br />下面是C++的样例:<br />#include <br />using namespace std;</p><p>int main(){<br />int a, b, t;<br />cin &gt;&gt; t;<br />while( t != 0 ){<br />t --;<br />cin &gt;&gt; a &gt;&gt; b;<br />cout &lt;&lt; a * b &lt;&lt; endl;<br />}</p><p>return 0;<br />}</p><p>接下来是ANSI C的样例：<br />#include <STDIO.H></p><p>int main(){<br />int a, b, t;<br />scanf( "%d", &amp;t );<br />while( t -- ){ &lt;--------为什么可以这样写？思考一下:)<br />scanf( "%d%d", &amp;a, &amp;b)<br />printf( "%d\n", a * b);<br />}</p><p>return 0;<br />} <br />接下来是Java的样例：<br />import java.io.*;<br />import java.util.*;</p><p>public class Main<br />{<br />public static void main(String args[]) throws Exception<br />{<br />Scanner cin=new Scanner(System.in);<br />int a, b, t;<br />t = cin.nextInt();<br />while( t != 0 ){<br />t --;<br />a=cin.nextInt();<br />b=cin.nextInt();<br />System.out.println(a*b);<br />}<br />}<br />}</p></p>

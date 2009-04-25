@@ -1,0 +1,14 @@
+<h3>description</h3>
+<p><p>求解A+B，-1000 &lt; A,B &lt; 1000</p></p>
+<h3>input</h3>
+<p><p>多组测试数据，每行两个数字A和B</p></p>
+<h3>output</h3>
+<p><p>对于每组测试数据，输出A+B</p></p>
+<h3>sampleinput</h3>
+<p><p>1 2<br />2 3</p></p>
+<h3>sampleoutput</h3>
+<p><p>3<br />5</p></p>
+<h3>source</h3>
+<p></p>
+<h3>hint</h3>
+<p><p>这是第一类的输入数据的类型，就是一直读输入文件直到EOF( End of File )<br />大家选择自己用的语言，仔细阅读一下下面的程序，不要直接用它提交AC，这样AC没有意义，因为以后的题你就不会了:(，磨刀不误砍柴工！</p><p>下面是C++的样例:<br />#include <br />using namespace std;</p><p>int main(){<br />int a, b;<br />while( cin &gt;&gt; a &gt;&gt; b )<br />cout &lt;&lt; a + b &lt;&lt; endl;</p><p>return 0;<br />}</p><p>接下来是ANSI C的样例：<br />#include <STDIO.H></p><p>int main(){<br />int a, b;<br />while( scanf( "%d%d", &amp;a, &amp;b) != EOF )<br />printf( "%d\n", a + b);</p><p>return 0;<br />} <br />接下来是Java的样例：<br />import java.io.*;<br />import java.util.*;</p><p>public class Main<br />{<br />public static void main(String args[]) throws Exception<br />{<br />Scanner cin=new Scanner(System.in);<br />int a, b;<br />while( cin.hasNext() ){<br />a=cin.nextInt();<br />b=cin.nextInt();<br />System.out.println(a+b);<br />}<br />}<br />}</p></p>

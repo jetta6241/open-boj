@@ -1,0 +1,162 @@
+/*#############################################################
+Name: Gemstone
+Date: 2006-05-30
+Author: Viktor Persson
+#############################################################*/
+
+/* Standard element */
+* {
+	margin: 0;
+	padding: 0;
+}
+body {
+	background: #999 url(img/bg.gif) repeat-y;
+	font-family: Tahoma,sans-serif;
+	font-size: 1.1em;
+	padding-left: 25px;
+}
+
+ul.warn {
+    width:800px;
+    float:none;
+    margin:3px;
+}
+ul.warn li {
+	line-height:1.4em;
+    color:red;
+    font-size:12px;
+}
+ul.warn li span{
+	width:100%;
+    font-size:14px;
+    float:none;
+}
+
+/* Misc */
+.clearer {
+	clear: both;
+}
+div.quote {
+	border-left: 4px solid #36C;
+	clear: both;
+	color: #555;
+	display: block;
+	font: italic 1.1em Verdana,serif;
+	margin: 12px 0 12px 16px;
+	padding-left: 12px;
+}
+
+
+/* Top & Header */
+.top {
+	background: url(img/top.gif);
+	color: #FFF;
+	width: 939px;
+}
+.top h1 {
+	font: bold 2em sans-serif;
+	padding: 5px;
+    line-height:1.5em;
+}
+.header {
+	background: url(img/header.gif); 
+	height: 70px;
+	width: 939px; 
+}
+
+/* Menu */
+div.menu ul {
+	float: left;
+	margin: 0 1px 0 0;
+}
+div.menu li {
+	list-style-image: none;
+    font-size:18px;
+    font-weight:bold;
+}
+div.menu a {
+	background: #4B4B4B;
+	color: #DDD;
+	display: block;
+	font-family: sans-serif;
+	font-size: 85%;
+	padding: 5px 0 5px 8px;
+	text-decoration: none;
+	width: 180px;
+}
+div.menu a#current {
+	background: #666; color: #FFF;
+}
+div.menu a:hover {
+	background: #555; color: #FFF;
+}
+div.menu li {
+	list-style-type: none;
+	margin: 0 0 1px 0;
+	padding: 0;
+}
+
+
+/* Left side */
+div.content_left {
+	margin: 1px;
+	width: 930px;
+}
+div.date {
+	background: #0070CD url(img/bgdate.gif) repeat-x;
+	color: #FFF;
+	font-weight: bold;
+	padding: 3px 0px 3px 30px;
+    line-height:1.7em;
+}
+
+div.newsitem {
+	background: #F0F0F0;
+	border: 1px solid #EEE;
+	border-color: #EEE #EEE #DDD #EEE;
+	clear: both;
+	color: #333;
+	line-height: 1.0;
+	margin: 2px;
+	padding: 2px;
+    height:600px;
+}
+div.newsitem img {
+	border: 3px double #CCC;
+	margin: 2px;
+}
+div.newsitem .title {
+	color: #0066CC;
+	font: bold 1.2em Tahoma,sans-serif;
+	padding: 3px 4px;
+    text-align:center;
+}
+div.newsitem .body {
+	font-family: "Trebuchet MS",Tahoma,sans-serif;
+	font-size: 1.0em;
+	text-align: justify;
+    line-height:1.0;
+    padding:10px;
+    font-weight:normal;
+}
+
+.form p
+{
+    padding:4px;
+    padding-bottom:6px;
+}
+.form p span
+{
+    float:left;
+    font-size:15px;
+    width:8em;
+    font-weight:bold;
+    font-size:17px;
+}
+.form .input
+{
+    background:#fff;
+    border:1px solid #000;
+    padding:2px;
+}
+
