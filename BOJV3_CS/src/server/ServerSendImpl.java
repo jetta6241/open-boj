@@ -4,7 +4,6 @@ import bean.JudgeBean;
 import bean.RunBean;
 import java.net.*;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.Scanner;
 import server.db.DBService;
@@ -17,14 +16,12 @@ public class ServerSendImpl implements Runnable
 {
     /**DB服务*/
     private DBService dbs = null;
-    /**Judge队列，存放各个Judge的信息*/
-    private ArrayList<JudgeBean> listJ = new ArrayList();
-    /**当前该向哪个Judge发送待判题目*/
-    private int curJ = 0;
-
-    public ServerSendImpl(DBService d)
+    /**Server控制器*/
+    private ServerController controller = null;
+    public ServerSendImpl(DBService d,ServerController con)
     {
         dbs = d;
+        controller = con;
     }
 
     /***
@@ -47,10 +44,17 @@ public class ServerSendImpl implements Runnable
                 if(r!=null)
                 {
                     //非空，发送
-                    if(sendRunBean(r))
+                    JudgeBean j = controller.getNextJudge();
+                    if(sendRunBean(r,j))
                     {
                         //如果发送成功，移除
                         dbs.removeUnjudgeFirst();
+                        //成功事件
+                        controller.handle(controller.EVENT_SEND_SUCCESS, j);
+                    }
+                    else
+                    {
+                        controller.handle(controller.EVENT_SEND_FAIL, j);
                     }
                     TimeUnit.MILLISECONDS.sleep(50);
                     //如果发送失败，不弹出队列头元素，等待下次重发
@@ -64,7 +68,8 @@ public class ServerSendImpl implements Runnable
             }
             catch(Exception e)
             {
-                e.printStackTrace();
+                controller.handle(ServerController.EVENT_EXCEPTION,new Exception("发送题目线程出错",e));
+                //e.printStackTrace();
             }//end catch 发送待判题目
         }
     }
@@ -74,18 +79,21 @@ public class ServerSendImpl implements Runnable
      * @param  RunBean 要尝试发送的RunBean
      * @return 成功发送，则返回true，否则返回false
      */
-    private boolean sendRunBean(RunBean b)
+    private boolean sendRunBean(RunBean b,JudgeBean judge)
     {
+
+        if(judge==null)
+        {
+            //没有可用的Client
+            return false;
+        }
+
         Socket socket = null;
         try
         {
-            if(curJ>=listJ.size())
-            {
-                curJ = 0;
-            }
+
             //获取当前要使用的Judge
-            JudgeBean j = listJ.get(curJ);
-            socket = new Socket(j.getIp(),j.getPort());
+            socket = new Socket(judge.getIp(),judge.getPort());
             //构造Object发送流
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             oos.writeObject(b);
@@ -105,7 +113,7 @@ public class ServerSendImpl implements Runnable
         catch(Exception e)
         {
             //产生异常，则发送失败
-            e.printStackTrace();
+            controller.handle(ServerController.EVENT_EXCEPTION,new Exception("发送线程发送题目失败",e));
             return false;
         }
         finally
@@ -120,13 +128,5 @@ public class ServerSendImpl implements Runnable
         }
     }
 
-    public void addJudge(String ip,int port)
-    {
-        JudgeBean j = new JudgeBean();
-        j.setIp(ip);
-        j.setPort(port);
-        listJ.add(j);
-    }
 
-    
 }

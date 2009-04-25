@@ -2,6 +2,7 @@ package server.db;
 
 import config.Const;
 import java.sql.*;
+import tool.Tools;
 
 
 /**
@@ -11,38 +12,32 @@ import java.sql.*;
 public class MySQLDB
 {
     /**数据库连接*/
-    private Connection conn;
+    private static Connection conn;
     /**是否加载过了Class*/
     private static boolean inited = false;
 
     /**返回数据库的Connection*/
-    public static Connection getConn()
+    public static Connection getConn() throws Exception
     {
-        //若没初始化驱动，先初始化
-        if(!inited)
+        //若没初始化驱动或者连接已经失效，先初始化
+        if(!inited || conn.isClosed())
         {
             try
             {
                 //没有加载数据库驱动
                 Class.forName("com.mysql.jdbc.Driver");
                 inited = true;
+                //得到连接
+                conn = DriverManager.getConnection(Const.DB_URL, Const.DB_USER, Const.DB_PASS);
             }
-            catch (ClassNotFoundException ex)
+            catch (Exception ex)
             {
-                ex.printStackTrace();
+                Tools.logException(ex);
                 return null;
             }
         }
         //返回Connection
-        try
-        {
-            //返回Connection
-            return DriverManager.getConnection(Const.DB_URL, Const.DB_USER, Const.DB_PASS);
-        }
-        catch (SQLException ex)
-        {
-            ex.printStackTrace();
-            return null;
-        }
+        return conn;
+
     }
 }
