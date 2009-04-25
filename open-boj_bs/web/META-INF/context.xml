@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiJARLocking="true" path="/open-boj_bs">
+<Resource name="jdbc/ins" auth="Container"
+            type="javax.sql.DataSource" username="openboj" password="openboj"
+            driverClassName="com.mysql.jdbc.Driver" url="jdbc:mysql://localhost:3306/openboj?characterEncoding=utf-8"
+            maxActive="2000" maxIdle="30" removeAbandoned="true" maxWait="20000" removeAbandonedTimeout="60"/>
+</Context>
